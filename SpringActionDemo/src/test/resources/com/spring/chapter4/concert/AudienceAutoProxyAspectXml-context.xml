@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="audience" class="com.spring.chapter4.concert.Audience1"></bean>
+
+	<bean id="singer" class="com.spring.chapter4.concert.Singer"></bean>
+
+
+	<aop:config>
+		<aop:aspect ref="audience"><!-- 引用audience Bean -->
+			<!-- 声明切入点 -->
+			<aop:pointcut id="performancePointcut"
+				expression="execution(** com.spring.chapter4.concert.Performance.perform(..))" />
+			<!-- 表演之前 -->
+			<aop:before pointcut-ref="performancePointcut" method="takeSeats" />
+			<aop:before pointcut-ref="performancePointcut" method="turnOffCellPhones" />
+			<!-- 表演之后 -->
+			<aop:after-returning pointcut-ref="performancePointcut"
+				method="applaud" />
+			<!-- 表演失败之后 -->
+			<aop:after-throwing pointcut-ref="performancePointcut"
+				method="demandRefund" />
+		</aop:aspect>
+	</aop:config>
+</beans>
